@@ -1,224 +1,216 @@
-\# Software Engineering Laboratory
+# Lab 07 – Fuzzing for Input Validation Bugs
 
+<p align="center">
+  <b>Software Engineering Laboratory</b><br>
+  Hotel Booking Application
+</p>
 
+---
 
-A collection of laboratory exercises, source code, implementations, test cases, and documentation completed as part of the Software Engineering course.
+## Student Information
 
-
-
-\## Student Details
-
-
-
-| Field | Information |
-
+| Field | Details |
 |---|---|
+| **Name** | Girish G N |
+| **SRN** | PES1UG24CS571 |
+| **Course** | Software Engineering |
+| **Lab** | 07 – Fuzzing for Input Validation Bugs |
 
-| \*\*Name\*\* | Girish G N |
+## Project Overview
 
-| \*\*SRN\*\* | PES1UG24CS571 |
+This laboratory exercise focuses on identifying and fixing input-validation bugs using **Fuzz Testing** and **Property-Based Testing**.
 
-| \*\*GitHub\*\* | \[GIRISH-G-N](https://github.com/GIRISH-G-N) |
+The Hotel Booking application contains three functions that process user inputs. Hypothesis is used to generate different types of inputs, including malformed strings, empty values and `None`, to identify unexpected crashes.
 
+The application is then improved with appropriate input validation and safe error handling.
 
+## Objectives
 
-\---
+- Understand the concept of fuzz testing and property-based testing.
+- Identify input-validation vulnerabilities in Python functions.
+- Generate test inputs automatically using Hypothesis.
+- Detect application crashes and unexpected exceptions.
+- Implement input validation and defensive programming.
+- Verify the corrected application using automated tests.
 
+## Technologies Used
 
+| Technology | Purpose |
+|---|---|
+| Python 3.11 | Application development |
+| Hypothesis | Property-based and fuzz testing |
+| Pytest | Automated test execution |
+| Windows CMD | Execution and testing environment |
+| Git & GitHub | Version control and submission |
 
-\## ⭐ Important: Lab 06 \& Lab 07 – Forked Repository
+## Application Functions
 
+The Hotel Booking application contains the following three functions:
 
+### 1. `nights_stayed(days)`
 
-\*\*The complete Hotel Booking application implementation for Lab 06 and Lab 07 is maintained in my forked repository.\*\*
+Calculates the number of nights between check-in and check-out days.
 
+**Example:**
+```python
+nights_stayed("12-15")
+```
+**Output:** `3`
 
+### 2. `room_floor(room_code)`
 
-<font color="blue">\*\*\[➡️ OPEN MY FORKED REPOSITORY – L6\_L7\_22\_hotel\_booking](https://github.com/GIRISH-G-N/L6\_L7\_22\_hotel\_booking)\*\*</font>
+Extracts the floor number from a hotel room code.
 
+**Example:**
+```python
+room_floor("D-305")
+```
+**Output:** `3`
 
+### 3. `booking_label(names_csv)`
 
-This repository includes:
+Generates a booking label using the lead guest's name and the number of additional guests.
 
+**Example:**
+```python
+booking_label("ravi, priya")
+```
+**Output:** `Ravi +1`
 
+## Fuzz Testing Methodology
 
-\- Lab 06 – Code Coverage and Branch Coverage Analysis.
+Hypothesis was used to generate a wide variety of inputs automatically.
 
-\- Lab 07 – Fuzzing for Input Validation Bugs.
+The test cases use:
 
-\- Python application source code and test files.
+- Random text inputs.
+- Empty strings.
+- Special characters.
+- Missing or malformed values.
+- `None` values.
 
-\- Execution screenshots and test results.
+Each function is tested to verify that unexpected inputs do not cause an unhandled exception.
 
-\- Lab 7 PDF report and documentation.
+### Initial Testing
 
+The original application contained input-handling problems.
 
+Hypothesis identified failures in all three functions:
 
-\---
+| Function | Identified Problems |
+|---|---|
+| `nights_stayed()` | Invalid date format, missing values and `None` |
+| `room_floor()` | Missing room number, invalid characters and `None` |
+| `booking_label()` | Empty guest list and `None` |
 
+**Initial test result: 3 failed**
 
+### Bug Fixes and Improvements
 
-\## Main Repository Structure
+The application was updated with defensive input validation.
 
+- **`nights_stayed()`** – Validates input type, date format, empty components and day order.
+- **`room_floor()`** – Validates room-code structure and numeric room information.
+- **`booking_label()`** – Handles non-string and empty inputs, filters blank guest names and provides a fallback label.
 
+## Final Testing Results
+
+After implementing the fixes, the same Hypothesis tests were executed again using Pytest.
+
+**Final result: 3 passed**
+
+| Test Case | Result |
+|---|---|
+| `test_nights_stayed_no_crash` | PASSED |
+| `test_room_floor_no_crash` | PASSED |
+| `test_booking_label_no_crash` | PASSED |
+
+All three functions successfully completed the generated no-crash tests.
+
+## Project Structure
 
 ```text
-
-SE-Labs-PES1UG24CS571/
-
+Lab-07/
 │
-
-├── Lab-01/
-
-├── Lab-02/
-
-├── Lab-03/
-
-├── Lab-04/
-
-├── Lab-05/
-
-├── Lab-06/
-
-├── Lab-07/
-
-│   ├── hotel\_booking.py
-
-│   ├── test\_hotel\_booking.py
-
-│   ├── SS -01.png
-
-│   ├── SS-03.png
-
-│   ├── 04\_fixed\_output.png
-
-│   ├── 05\_passing\_tests.png
-
-│   └── Lab\_7\_Fuzzing\_Input\_Validation\_Report\_Girish\_G\_N.pdf
-
+├── hotel_booking.py
+├── test_hotel_booking.py
 │
-
+├── SS -01.png
+├── SS-03.png
+├── 04_fixed_output.png
+├── 05_passing_tests.png
+│
+├── Lab_7_Fuzzing_Input_Validation_Report_Girish_G_N.pdf
+│
 └── README.md
-
 ```
 
+## Execution Instructions
 
+### 1. Install Dependencies
 
-\## Laboratory Overview
+```bash
+pip install hypothesis pytest
+```
 
+### 2. Run the Application
 
+```bash
+python hotel_booking.py
+```
 
-| Laboratory | Description |
+### 3. Execute Fuzz Tests
 
+```bash
+python -m pytest test_hotel_booking.py -v
+```
+
+### Expected Test Summary
+
+```text
+test_nights_stayed_no_crash PASSED
+test_room_floor_no_crash PASSED
+test_booking_label_no_crash PASSED
+
+3 passed
+```
+
+## Screenshots and Documentation
+
+The following screenshots document the testing process:
+
+| Screenshot | Description |
 |---|---|
+| `SS -01.png` | Environment setup and original application failure |
+| `SS-03.png` | Initial Hypothesis test failures |
+| `04_fixed_output.png` | Corrected application execution |
+| `05_passing_tests.png` | Final successful test execution |
 
-| Lab 01 | Laboratory exercise 01 |
+**Detailed Laboratory Report:**
 
-| Lab 02 | Laboratory exercise 02 |
+[Download Lab 07 PDF Report](Lab_7_Fuzzing_Input_Validation_Report_Girish_G_N.pdf)
 
-| Lab 03 | Laboratory exercise 03 |
+## Related Repository
 
-| Lab 04 | Laboratory exercise 04 |
+The complete Hotel Booking application work for Lab 06 and Lab 07 is maintained in my forked repository.
 
-| Lab 05 | Laboratory exercise 05 |
+<p align="center">
+  <a href="https://github.com/GIRISH-G-N/L6_L7_22_hotel_booking">
+    <b>VIEW FORKED REPOSITORY – L6_L7_22_hotel_booking</b>
+  </a>
+</p>
 
-| Lab 06 | Code Coverage and Branch Coverage Analysis |
+This repository includes the application implementation, coverage analysis, fuzz testing, source code, screenshots and documentation.
 
-| Lab 07 | Fuzzing for Input Validation Bugs |
+---
 
+## Conclusion
 
+This laboratory exercise demonstrates how fuzz testing and property-based testing can identify input-validation bugs that may not be detected through ordinary test cases.
 
-\## Lab 07 – Fuzzing for Input Validation Bugs
+By using Hypothesis and Pytest, unexpected input conditions were identified, the application was improved with defensive validation, and all three no-crash tests passed.
 
+---
 
-
-Lab 07 focuses on identifying and fixing input-validation bugs in a Hotel Booking application using Python and property-based testing.
-
-
-
-\### Application Functions
-
-
-
-\- `nights\_stayed()` – Calculates the number of nights between check-in and check-out days.
-
-\- `room\_floor()` – Extracts the floor number from a room code.
-
-\- `booking\_label()` – Generates a booking label from guest names.
-
-
-
-\### Tools and Technologies
-
-
-
-\- Python 3
-
-\- Hypothesis
-
-\- Pytest
-
-
-
-\### Testing Results
-
-
-
-Hypothesis was used to generate different inputs and identify cases that caused the original application to crash.
-
-
-
-After implementing input validation and safe fallback handling, all three fuzz tests passed.
-
-
-
-\*\*Final result: 3 passed.\*\*
-
-
-
-\### Lab 07 Deliverables
-
-
-
-The `Lab-07` folder contains:
-
-
-
-\- Corrected application source code.
-
-\- Hypothesis test file.
-
-\- Initial execution and failing-test screenshots.
-
-\- Corrected application and passing-test screenshots.
-
-\- Complete PDF laboratory report.
-
-
-
-\---
-
-
-
-\## Purpose
-
-
-
-This repository serves as an organized record of Software Engineering laboratory work, demonstrating practical implementation, testing, debugging, and documentation of software engineering concepts.
-
-
-
-\---
-
-
-
-\*\*Maintained by:\*\* Girish G N  
-
-\*\*SRN:\*\* PES1UG24CS571
-
-
-
-\*\*Main Repository:\*\* \[SE-Labs-PES1UG24CS571](https://github.com/GIRISH-G-N/SE-Labs-PES1UG24CS571)  
-
-\*\*Forked Repository:\*\* \[L6\_L7\_22\_hotel\_booking](https://github.com/GIRISH-G-N/L6\_L7\_22\_hotel\_booking)
-
+**Submitted by:** Girish G N  
+**SRN:** PES1UG24CS571
